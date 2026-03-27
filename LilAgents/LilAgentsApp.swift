@@ -16,41 +16,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
     let updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
 
-    private var globalHotkeyMonitor: Any?
-
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
         controller = LilAgentsController()
         controller?.start()
         setupMenuBar()
-        setupGlobalHotkey()
-    }
-
-    // MARK: - Global Hotkey (⌘⇧Space → open last character)
-
-    private func setupGlobalHotkey() {
-        globalHotkeyMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
-            // ⌘⇧Space
-            guard event.keyCode == 49,
-                  event.modifierFlags.contains(.command),
-                  event.modifierFlags.contains(.shift) else { return }
-            DispatchQueue.main.async {
-                self?.openLastActiveCharacter()
-            }
-        }
-    }
-
-    private func openLastActiveCharacter() {
-        guard let chars = controller?.characters else { return }
-        // Prefer already-open popover; otherwise open first visible character
-        if let open = chars.first(where: { $0.isIdleForPopover }) {
-            open.popoverWindow?.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
-            return
-        }
-        if let first = chars.first(where: { $0.window.isVisible }) {
-            first.handleClick()
-        }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
