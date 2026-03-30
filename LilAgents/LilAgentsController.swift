@@ -30,8 +30,8 @@ class LilAgentsController {
         char1.flipXOffset = 0
         char2.flipXOffset = -9
 
-        char1.positionProgress = 0.3
-        char2.positionProgress = 0.7
+        char1.positionProgress = 0.2
+        char2.positionProgress = 0.8
 
         char1.pauseEndTime = CACurrentMediaTime() + Double.random(in: 0.5...2.0)
         char2.pauseEndTime = CACurrentMediaTime() + Double.random(in: 8.0...14.0)
